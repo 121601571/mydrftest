@@ -16,6 +16,8 @@ class JSONResponse(HttpResponse):
         super(JSONResponse, self).__init__(content, **kwargs)
 
 @csrf_exempt
+@api_view(['GET', 'POST'])
+
 def snippet_list(request):
         """
         列出所有的code snippet，或创建一个新的snippet。
@@ -26,8 +28,8 @@ def snippet_list(request):
             return JSONResponse(serializer.data)
 
         elif request.method == 'POST':
-            data = JSONParser().parse(request)
-            serializer = SnippetSerializer(data=data)
+            serializer = SnippetSerializer(data=request.data)
+
             if serializer.is_valid():
                 serializer.save()
                 return JSONResponse(serializer.data, status=201)
