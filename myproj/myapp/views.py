@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from .models import Snippet
@@ -31,6 +32,23 @@ def snippet_list(request):
                 serializer.save()
                 return JSONResponse(serializer.data, status=201)
             return JSONResponse(serializer.errors, status=400)
+
+@csrf_exempt
+@api_view(["GET"])
+def snippet_search(request):
+        """
+        列出所有的code snippet，或创建一个新的snippet。
+        """
+        if request.method == 'GET':
+            #print(request.kwargs)
+            name = request.query_params.get('name')
+            print(name)
+            snippets = Snippet.objects.filter(name = name)
+            serializer = SnippetSerializer(snippets, many=True)
+            return JSONResponse(serializer.data)
+
+
+
 
 @csrf_exempt
 def snippet_detail(request, pk):
