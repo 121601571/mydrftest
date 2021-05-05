@@ -10,4 +10,8 @@ class Snippet(models.Model):
     class Meta:
         ordering = ('created',)
 
-
+class books(models.Model):
+    name = models.CharField(max_length=10)
+    descr = models.CharField(max_length=10)
+    status = models.IntegerField()
+    owner = models.ForeignKey('auth.User', related_name='user_profile', on_delete=models.CASCADE, )

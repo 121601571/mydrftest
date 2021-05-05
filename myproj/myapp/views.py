@@ -3,8 +3,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-from .models import Snippet
-from .serializers import SnippetSerializer
+from .models import Snippet, books
+from .serializers import SnippetSerializer, BookSerializer
 
 class JSONResponse(HttpResponse):
     """
@@ -77,3 +77,24 @@ def snippet_detail(request, pk):
         elif request.method == 'DELETE':
             snippet.delete()
             return HttpResponse(status=204)
+
+
+@csrf_exempt
+@api_view(['GET', 'POST'])
+
+def book_list(request):
+        """
+        列出所有的code snippet，或创建一个新的snippet。
+        """
+        if request.method == 'GET':
+            snippets = books.objects.all()
+            serializer = BookSerializer(snippets, many=True)
+            return JSONResponse(serializer.data)
+
+        elif request.method == 'POST':
+            serializer = BookSerializer(data=request.data)
+
+            if serializer.is_valid():
+                serializer.save()
+                return JSONResponse(serializer.data, status=201)
+            return JSONResponse(serializer.errors, status=400)

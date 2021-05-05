@@ -1,8 +1,13 @@
 from rest_framework import serializers
-from .models import Snippet
+from .models import Snippet, books
+from django.contrib.auth.models import User
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('name')
 
-class SnippetSerializer(serializers.ModelSerializer):
+class SnippetSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Snippet
         fields = ('id', 'name', 'addr', 'status', )
@@ -26,3 +31,12 @@ class SnippetSerializer(serializers.ModelSerializer):
 
         # instance.save()
         # return instance
+
+
+class BookSerializer(serializers.HyperlinkedModelSerializer):
+    owner = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+
+
+    class Meta:
+        model = books
+        fields = ('owner', 'name', 'descr', 'status')
