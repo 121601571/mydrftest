@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',  # <-- Here
+
     'myapp',
 ]
 
@@ -77,8 +79,11 @@ WSGI_APPLICATION = 'myproj.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'mytest2',
+        'USER': 'liyi',
+        'PASSWORD': 'Sap12345',
+        'HOST': '192.168.31.9',
     }
 }
 
@@ -130,5 +135,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         #'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',  # <-- And here
+
     ]
 }

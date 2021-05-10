@@ -5,6 +5,12 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from .models import Snippet, books
 from .serializers import SnippetSerializer, BookSerializer
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+
+
+from django.contrib.auth.decorators import login_required
 
 class JSONResponse(HttpResponse):
     """
@@ -81,7 +87,8 @@ def snippet_detail(request, pk):
 
 @csrf_exempt
 @api_view(['GET', 'POST'])
-
+@authentication_classes((SessionAuthentication, BasicAuthentication, TokenAuthentication))
+@permission_classes((IsAuthenticated,))
 def book_list(request):
         """
         列出所有的code snippet，或创建一个新的snippet。
